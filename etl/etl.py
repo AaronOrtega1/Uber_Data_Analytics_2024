@@ -68,6 +68,20 @@ class ETL:
 
         self.data[col_name] = self.data[col_name].str.replace('"', "").str.strip()
 
+    def convert_cancelled_incomplete_into_bools(self, col_name):
+        """
+        Convert callled or incomplete flags into booleans for specific columns
+
+        Args:
+                col_name (str): Name of the column which we want to remove triple quotes.
+        """
+
+        # Check if columns exist
+        if col_name not in self.data.columns:
+            raise KeyError(f"Column '{col_name}' not found in DataFrame")
+
+        self.data[col_name] = self.data[col_name].notna()
+
 
 def main():
     input_path = "/data/ncr_ride_bookings.csv"
@@ -86,6 +100,16 @@ def main():
 
     for col in remove_triple_quotes_cols:
         etl.remove_triple_quotes(col)
+
+    # Turn flags in cols to booleans
+    cancelled_incomplete_cols = [
+        "Cancelled Rides by Customer",
+        "Cancelled Rides by Driver",
+        "Incomplete Rides",
+    ]
+
+    for col in cancelled_incomplete_cols:
+        etl.convert_cancelled_incomplete_into_bools(col)
 
 
 if __name__ == "__main__":
