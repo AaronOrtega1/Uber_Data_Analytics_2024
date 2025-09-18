@@ -15,6 +15,19 @@ class ETL:
         """
         self.data = data
 
+    def _delete_col(self, col_name: str):
+        """
+        Delete a column from a DataFrame
+            Args:
+                col_name (str) : Name of the colums to delete.
+        """
+
+        # Check if column exist
+        if col_name not in self.data.columns:
+            raise KeyError(f"Column '{col_name}' not found in DataFrame")
+
+        self.data = self.data.drop(col_name, axis=1)
+
     def merge_date_time_to_timestamp(
         self, col_date: str, col_time: str, col_timestamp: str = "timestamp"
     ):
@@ -37,7 +50,23 @@ class ETL:
             self.data[col_date] + " " + self.data[col_time]
         )
 
-        return self.data
+        # Drop date and time columns
+        self._delete_col(col_date)
+        self._delete_col(col_time)
+
+    def remove_triple_quotes(self, col_name: str):
+        """
+        Remove triple quotes from a column in the DataFrame.
+
+        Args:
+                col_name (str): Name of the column which we want to remove triple quotes.
+        """
+
+        # Check if columns exist
+        if col_name not in self.data.columns:
+            raise KeyError(f"Column '{col_name}' not found in DataFrame")
+
+        self.data[col_name] = self.data[col_name].str.replace('"', "").str.strip()
 
 
 def main():
@@ -50,7 +79,13 @@ def main():
     etl = ETL(df)
 
     # Merge Date and Time cols into booking_timestamp col
-    df = etl.merge_data_time_to_timestamp("Date", "Time", "booking_timestamp")
+    etl.merge_date_time_to_timestamp("Date", "Time", "booking_timestamp")
+
+    # Remove triple quotes
+    remove_triple_quotes_cols = ["Customer ID", "Booking ID"]
+
+    for col in remove_triple_quotes_cols:
+        etl.remove_triple_quotes(col)
 
 
 if __name__ == "__main__":
