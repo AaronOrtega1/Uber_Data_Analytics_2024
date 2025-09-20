@@ -111,6 +111,56 @@ def main():
     for col in cancelled_incomplete_cols:
         etl.convert_cancelled_incomplete_into_bools(col)
 
+    df = etl.data
+
+    # Load environment variables from the .env file
+    load_dotenv()
+
+    # Env variables
+    POSTGRES_DB = os.getenv("POSTGRES_DB")
+    POSTGRES_USER = os.getenv("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    PORT = 5432
+    HOST = "postgres"
+
+    # DB engine
+    conn_string = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{HOST}:{PORT}/{POSTGRES_DB}"
+    engine = create_engine(conn_string)
+
+    # TODO finish creating staging table
+    with engine.connect() as conn:
+        conn.execute(
+            text("""
+            CREATE TABLE IF NOT EXISTS staging_bookings (
+                booking_id              VARCHAR(50) PRIMARY KEY,
+                booking_status          VARCHAR(50),
+                customer_id             VARCHAR(50),
+                vehicle_type            VARCHAR(50),
+                pick_up_location        VARCHAR(200),
+                drop_location           VARCHAR(200),
+                avg_vtat                DECIMAL(5,2),
+                avg_ctat                DECIMAL(5,2),
+                cancelled_by_customer   BOOL,
+                customer_cancellation_reason TEXT,
+                cancelled_by_driver     BOOL,
+                driver_cancellation_reason TEXT,
+                incomplete_rides        BOOL,
+                incomplete_rides_reason TEXT,
+                booking_value           DECIMAL(10,2),
+                ride_distance           DECIMAL(6,2),
+                driver_rating           DECIMAL(2,1),
+                customer_rating         DECIMAL(2,1),
+                payment_method          VARCHAR(50),
+                booking_timestamp       TIMESTAMP
+            )
+        """)
+        )
+        conn.commit()
+
+    # Load transformed data
+    df.to_sql("staging_bookings", engine, if_exists="replace", index=False)
+
 
 if __name__ == "__main__":
     main()
+    print("✅ ETL finished. Data transformed and loaded into staging_bookings")

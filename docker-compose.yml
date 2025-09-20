@@ -23,7 +23,8 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./data/:/data
+      - ./data:/data
+      - ./etl:/app
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
