@@ -157,6 +157,13 @@ def main():
         )
         conn.commit()
 
+    # change df columns names to all lowercase and change " " with "_"
+    cols_names = [
+        col_name.replace(" ", "_").lower() for col_name in df.columns.tolist()
+    ]
+
+    df.rename(columns=dict(zip(df.columns, cols_names)), inplace=True)
+
     # Load transformed data
     df.to_sql("staging_bookings", engine, if_exists="replace", index=False)
 
