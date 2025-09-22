@@ -141,9 +141,9 @@ def main():
                 avg_vtat                DECIMAL(5,2),
                 avg_ctat                DECIMAL(5,2),
                 cancelled_by_customer   BOOL,
-                customer_cancellation_reason TEXT,
+                customer_cancellation_reason VARCHAR(300),
                 cancelled_by_driver     BOOL,
-                driver_cancellation_reason TEXT,
+                driver_cancellation_reason VARCHAR(300),
                 incomplete_rides        BOOL,
                 incomplete_rides_reason TEXT,
                 booking_value           DECIMAL(10,2),
@@ -163,4 +163,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    print("✅ ETL finished. Data transformed and loaded into staging_bookings")
+    print("ETL finished. Data transformed and loaded into staging_bookings")
