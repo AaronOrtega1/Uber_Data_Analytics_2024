@@ -82,6 +82,38 @@ class ETL:
 
         self.data[col_name] = self.data[col_name].notna()
 
+    def create_staging_table(self, engine_connection):
+        with engine_connection.connect() as conn:
+            conn.execute(
+                text(
+                    """
+                CREATE TABLE IF NOT EXISTS staging_bookings (
+                    booking_id              VARCHAR(50) PRIMARY KEY,
+                    booking_status          VARCHAR(50),
+                    customer_id             VARCHAR(50),
+                    vehicle_type            VARCHAR(50),
+                    pick_up_location        VARCHAR(200),
+                    drop_location           VARCHAR(200),
+                    avg_vtat                DECIMAL(5,2),
+                    avg_ctat                DECIMAL(5,2),
+                    cancelled_by_customer   BOOL,
+                    customer_cancellation_reason VARCHAR(300),
+                    cancelled_by_driver     BOOL,
+                    driver_cancellation_reason VARCHAR(300),
+                    incomplete_rides        BOOL,
+                    incomplete_rides_reason TEXT,
+                    booking_value           DECIMAL(10,2),
+                    ride_distance           DECIMAL(6,2),
+                    driver_rating           DECIMAL(2,1),
+                    customer_rating         DECIMAL(2,1),
+                    payment_method          VARCHAR(50),
+                    booking_timestamp       TIMESTAMP
+                )
+            """
+                )
+            )
+            conn.commit()
+
 
 def main():
     input_path = "/data/ncr_ride_bookings.csv"
@@ -127,42 +159,18 @@ def main():
     conn_string = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{HOST}:{PORT}/{POSTGRES_DB}"
     engine = create_engine(conn_string)
 
-    # TODO finish creating staging table
-    with engine.connect() as conn:
-        conn.execute(
-            text("""
-            CREATE TABLE IF NOT EXISTS staging_bookings (
-                booking_id              VARCHAR(50) PRIMARY KEY,
-                booking_status          VARCHAR(50),
-                customer_id             VARCHAR(50),
-                vehicle_type            VARCHAR(50),
-                pick_up_location        VARCHAR(200),
-                drop_location           VARCHAR(200),
-                avg_vtat                DECIMAL(5,2),
-                avg_ctat                DECIMAL(5,2),
-                cancelled_by_customer   BOOL,
-                customer_cancellation_reason VARCHAR(300),
-                cancelled_by_driver     BOOL,
-                driver_cancellation_reason VARCHAR(300),
-                incomplete_rides        BOOL,
-                incomplete_rides_reason TEXT,
-                booking_value           DECIMAL(10,2),
-                ride_distance           DECIMAL(6,2),
-                driver_rating           DECIMAL(2,1),
-                customer_rating         DECIMAL(2,1),
-                payment_method          VARCHAR(50),
-                booking_timestamp       TIMESTAMP
-            )
-        """)
-        )
-        conn.commit()
+    # Create staging table
+    etl.create_staging_table(engine)
 
-    # change df columns names to all lowercase and change " " with "_"
+    # Change df columns names to all lowercase and change " " with "_"
     cols_names = [
         col_name.replace(" ", "_").lower() for col_name in df.columns.tolist()
     ]
 
     df.rename(columns=dict(zip(df.columns, cols_names)), inplace=True)
+
+    # Remove duplicate booking_ids, keeping the first occurrence
+    df = df.drop_duplicates(subset=["booking_id"], keep="first")
 
     # Load transformed data
     df.to_sql("staging_bookings", engine, if_exists="replace", index=False)
