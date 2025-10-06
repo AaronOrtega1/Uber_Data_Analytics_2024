@@ -345,32 +345,32 @@ class StarSchemaCreator:
                         dt.time_key,
                         pm.payment_method_key,
                         bs.status_key,
-                    sb.booking_value,
-                    sb.ride_distance,
-                    sb.avg_vtat,
-                    sb.avg_ctat,
-                    sb.driver_ratings,
-                    sb.customer_rating,
-                    sb.cancelled_rides_by_customer,
-                    sb.cancelled_rides_by_driver,
-                    sb.incomplete_rides
-                from
-                    staging_bookings sb
-                left join dim_customers dc on
-                    sb.customer_id = dc.customer_id
-                left join dim_vehicle_types vt on
-                    sb.vehicle_type = vt.vehicle_type
-                left join dim_locations loc on
-                    sb.pickup_location = loc.pickup_location
-                    and sb.drop_location = loc.drop_location
-                left join dim_time dt on
-                    sb.booking_timestamp = dt.booking_timestamp
-                left join dim_payment_methods pm on
-                    sb.payment_method = pm.payment_method
-                left join dim_booking_status bs on
-                    sb.booking_status = bs.booking_status
-                    and coalesce(sb.reason_for_cancelling_by_customer, '') = coalesce(bs.cancellation_reason, '')
-                    and coalesce(sb.incomplete_rides_reason, '') = coalesce(bs.incomplete_reason, '');
+                        sb.booking_value,
+                        sb.ride_distance,
+                        sb.avg_vtat,
+                        sb.avg_ctat,
+                        sb.driver_ratings,
+                        sb.customer_rating,
+                        sb.cancelled_rides_by_customer,
+                        sb.cancelled_rides_by_driver,
+                        sb.incomplete_rides
+                    from
+                        staging_bookings sb
+                    left join dim_customers dc on
+                        sb.customer_id = dc.customer_id
+                    left join dim_vehicle_types vt on
+                        sb.vehicle_type = vt.vehicle_type
+                    left join dim_locations loc on
+                        sb.pickup_location = loc.pickup_location
+                        and sb.drop_location = loc.drop_location
+                    left join dim_time dt on
+                        sb.booking_timestamp = dt.booking_timestamp
+                    left join dim_payment_methods pm on
+                        sb.payment_method = pm.payment_method
+                    left join dim_booking_status bs on
+                        sb.booking_status = bs.booking_status
+                        and coalesce(sb.reason_for_cancelling_by_customer, '') = coalesce(bs.cancellation_reason, '')
+                        and coalesce(sb.incomplete_rides_reason, '') = coalesce(bs.incomplete_reason, '');
                 """
                 )
             )
