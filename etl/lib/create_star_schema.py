@@ -1,7 +1,6 @@
 from sqlalchemy import text
 
 
-# TODO: Finish StarSchemaCreator class with creation and population of star schema.
 class StarSchemaCreator:
     def __init__(self, engine):
         """
@@ -387,3 +386,6 @@ class StarSchemaCreator:
         self._populate_dimension_tables()
         self._create_fact_table()
         self._populated_fact_table()
+        print(
+            "StarSchemaCreator finished. staging_bookings table transformed into star schema."
+        )
