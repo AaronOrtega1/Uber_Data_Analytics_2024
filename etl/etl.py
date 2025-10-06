@@ -4,6 +4,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
+from lib.create_star_schema import StarSchemaCreator
+
 
 class ETL:
     def __init__(self, data):
@@ -174,6 +176,10 @@ def main():
 
     # Load transformed data
     df.to_sql("staging_bookings", engine, if_exists="replace", index=False)
+
+    # Create and Populate star schema with StarSchemaCreator class.
+    starSchema = StarSchemaCreator(engine)
+    starSchema.create_star_schema()
 
 
 if __name__ == "__main__":
