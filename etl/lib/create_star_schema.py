@@ -21,7 +21,8 @@ class StarSchemaCreator:
             "dim_vehicle_types",
             "dim_locations",
             "dim_time",
-            "dim_payment_",
+            "dim_payment_methods",
+            "dim_booking_status",
         ]
 
         with self.engine.connect() as conn:
