@@ -2,9 +2,18 @@
 
 ## 📌 Project Overview.
 
---- 
+This project focuses on analyzing Uber trip data to uncover patterns in demand, revenue, and driver performance. The objective is to design an end-to-end data analytics pipeline that transforms raw trip data into actionable insights for business decision-making.
+
+Using Python, I developed and ETL process to clean and load over **148k records** into a PostgreSQL database (in Docker). I implemented a star schema to improve query efficiency and simplify reporting logic. SQL queries were used to define key performance indicators such as **total bookings, revenue and cancellation rate**.
+
+Theses metrics were visualized in a [Power BI dashboard]() highlighting trends in demand by time, location, and driver, enabling insights into **peak operating hours, revenue optimization, and cancellation impact**. The project demonstrates the complete workflow of transforming raw into meaningful business intelligence.
+
+---
 
 ## Data Schema
+
+### Staging Table
+
 - `booking_id`: Unique identifier for each ride booking.
 - `booking_status`: Status of booking (Completed, Cancelled by Customer, Cancelled by Driver, etc.).
 - `customer_id`: Unique identifier for customers.
@@ -25,6 +34,10 @@
 - `customer_rating`: Rating given by customer (1-5 scale)
 - `payment_method`: Method used for payment (UPI, Cash, Credit Card, Uber Wallet, Debit Card)
 - `booking_timestamp`: Timestamp of the booking.
+
+### Star Schema
+
+<img src="images/star_schema.png" alt="Star Schema" />
 
 ---
 
@@ -51,27 +64,28 @@ cd SQL-PowerBI-Project
 ```
 
 2. **Create a .env file in the root of the folder with the next information**
+
 ```env
 POSTGRES_DB=uber_db
 POSTGRES_USER=uber_user
 POSTGRES_PASSWORD=uber_passwordd
 ```
 
-3. **Start PostgreSQL with Docker**
+3. **Start PostgreSQL and ETL job with Docker**
 
 ```bash
 docker compose up -d
 ```
 
-3. **The `docker-compose.yml` file automatically creates the Database.**
-4. **Then a Python script runs that preprocess the data and loads it into a staging bookings table.**
-5. **Then the Python script uses the data loaded into the staging table to create a star schema to have simpler queries and simplified Business Reporting logic.**
-5. **To create a dashboard of your own, you have to connect the PostgreSQL DB to Power BI desktop also using the information in the `docker-compose.yml` file.**
+4. **The `docker-compose.yml` file automatically creates the Database.**
+5. **Then a Python script runs that preprocess the data and loads it into a `staging_bookings` table.**
+6. **Then the Python script uses the data loaded into the staging table to create a star schema to have simpler queries and simplified Business Reporting logic.**
+7. **To create a dashboard of your own, you have to connect the PostgreSQL DB to Power BI desktop also using the information in the `.env` file.**
 
 ---
 
-## 
+##
 
+## 👤 Author
 
-
-
+- [Francisco Aarón Ortega Anguiano](https://www.linkedin.com/in/francisco-aar%C3%B3n-ortega-anguiano-63109022a/) – Computer Systems Engineering Student
