@@ -176,6 +176,7 @@ def main():
 
     # Load transformed data
     df.to_sql("staging_bookings", engine, if_exists="replace", index=False)
+    print("ETL finished. Data transformed and loaded into staging_bookings")
 
     # Create and Populate star schema with StarSchemaCreator class.
     starSchema = StarSchemaCreator(engine)
@@ -184,4 +185,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    print("ETL finished. Data transformed and loaded into staging_bookings")
