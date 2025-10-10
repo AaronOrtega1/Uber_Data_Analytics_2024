@@ -50,6 +50,52 @@ Theses metrics were visualized in a [Power BI dashboard]() highlighting trends i
 
 ---
 
+## 🎯 Business Problem
+
+
+
+---
+
+## 📊 KPIs and metrics
+
+### Performance
+
+1. **Total Bookings and Total Completed Bookings** - 
+2. **Total and Percentage Incompleted Bookings** - 
+3. **Total and Percentage Cancelled Rides**
+4. **Total Bookings and Total Bookings Where Driver Was Not Found**
+
+### Financial
+
+1. **Total Revenue**
+2. **AVG Revenue**
+3. **Revenue per Customer**
+
+### Customer Behavior
+
+1. **Customer Segmentation**
+2. **Avg Customer Rating**
+3. **Avg Driver Rating**
+
+### Operational Efficiency
+
+1. **Avg Ride Distance**
+2. **Avg VTAT**
+3. **Avg CTAT**
+4. **Bookings by Quarter**
+5. **Bookings by Month**
+6. **Bookings by DOW**
+7. **Bookings by Time of Day**
+
+### Categorical Insights
+
+1. **Bookings by Vehicle Type**
+2. **Bookings by Payment Method**
+3. **Bookings by Status Category**
+4. **Reason to Cancel of Customer**
+
+---
+
 ## ⚙️ Local Setup Instructions
 
 ### Prerequisites
@@ -84,7 +130,9 @@ docker compose up -d
 
 ---
 
-##
+## 📷 Screenshots
+
+
 
 ## 👤 Author
 

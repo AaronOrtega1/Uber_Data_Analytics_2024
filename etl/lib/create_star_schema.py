@@ -312,7 +312,7 @@ class StarSchemaCreator:
 
     def _populated_fact_table(self):
         """
-        Master method to create the entire star schema.
+        Method to create the fact table.
         """
         with self.engine.connect() as conn:
             conn.execute(
@@ -370,7 +370,7 @@ class StarSchemaCreator:
                         sb.payment_method = pm.payment_method
                     left join dim_booking_status bs on
                         sb.booking_status = bs.booking_status
-                        and coalesce(sb.reason_for_cancelling_by_customer, '') = coalesce(bs.cancellation_reason, '')
+                        and coalesce(sb.reason_for_cancelling_by_customer, sb.driver_cancellation_reason, '') = coalesce(bs.cancellation_reason, '')
                         and coalesce(sb.incomplete_rides_reason, '') = coalesce(bs.incomplete_reason, '');
                 """
                 )
